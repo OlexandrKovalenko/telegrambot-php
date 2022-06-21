@@ -1,0 +1,6 @@
+#env.php
+log.txt
+UnitTest
+*.cache
+README.md
+.idea
