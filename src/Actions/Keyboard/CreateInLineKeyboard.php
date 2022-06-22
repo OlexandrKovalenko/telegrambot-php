@@ -12,12 +12,12 @@ class CreateInLineKeyboard
                 return array(
                     'inline_keyboard' => [
                         [
-                            ['text' => "Сменить имя", 'callback_data' => "updateName"],
-                            ['text' => 'Сменить фамилию', 'callback_data' => "updateLastName"],
+                            ['text' => hex2bin('F09F9383').'Ваши заявки', 'callback_data' => "updateAddress"],
                         ],
                         [
-                            ['text' => "Сменить номер телефона", 'callback_data' => "updatePhone"],
-                            ['text' => 'Сменить адресс доставки', 'callback_data' => "updateAddress"],
+                            ['text' => hex2bin('E29C8F')."Имя", 'callback_data' => "updateName"],
+                            ['text' => hex2bin('E29C8F').'Фамилия', 'callback_data' => "updateLastName"],
+                            ['text' => hex2bin('E29C8F')."Телефон", 'callback_data' => "updatePhone"],
                         ],
                     ]
                 );

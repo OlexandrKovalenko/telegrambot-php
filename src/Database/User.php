@@ -1,30 +1,30 @@
 <?php
 
-namespace App\Database\Users;
+namespace App\Database;
 
-
-use App\Database\DBConnect;
+use Exception;
 use PDO;
 
 class User
 {
     private PDO $query;
-    private DBConnect $db;
 
     public function __construct()
     {
-        $this->db = new DBConnect();
-        $this->query = $this->db->connect();
+        $db = new DBConnect();
+        $this->query = $db->connect();
     }
 
-    function find($id): object {
-        $stmt = $this->query->prepare('SELECT * FROM user where id = ?');
-        $stmt->execute([$id]);
-        return $user = $stmt->fetch(PDO::FETCH_OBJ);
+    function find($id)
+    {
+            $stmt = $this->query->prepare('SELECT * FROM user where id = ?');
+            $stmt->execute([$id]);
+            return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    function findTelegramId($telegram_id): object {
-        $stmt = $this->query->prepare('SELECT * FROM user where $telegram_id = ?');
+    function findByTelegramId($telegram_id)
+    {
+        $stmt = $this->query->prepare('SELECT * FROM user where telegram_id = ?');
         $stmt->execute([$telegram_id]);
         return $stmt->fetch(PDO::FETCH_OBJ);
     }

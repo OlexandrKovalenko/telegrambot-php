@@ -12,18 +12,20 @@ class MenuService
     private $telegramId;
     private Api $telegram;
 
-    function __construct($telegram, $id) {
+    function __construct($telegram, $id)
+    {
         $this->telegramId = $id;
         $this->telegram = $telegram;
     }
 
-    function showButtonsMenu($userSite, $botMessage){
+    function showButtonsMenu($userSite, $botMessage)
+    {
         $reply_markup = Keyboard::make([
             'keyboard' => $this->createKeyboards($userSite),
             'resize_keyboard' => true,
             'one_time_keyboard' => false
         ]);
-        $response = $this->telegram->setAsyncRequest(true)->sendMessage([
+        $response = $this->telegram->sendMessage([
             'chat_id' => $this->telegramId,
             'parse_mode' => 'MarkdownV2',
             'text' => $botMessage,
@@ -33,9 +35,10 @@ class MenuService
         //$messageId = $response->getMessageId();
     }
 
-    function showInlineMenu($userSite, $botMessage){
+    function showInlineMenu($userSite, $botMessage)
+    {
         $reply_markup = json_encode($this->createInlineKeyboards($userSite), true);
-        $response = $this->telegram->setAsyncRequest(true)->sendMessage([
+        $response = $this->telegram->sendMessage([
             'chat_id' => $this->telegramId,
             'parse_mode' => 'MarkdownV2',
             'text' => $botMessage,
@@ -43,11 +46,13 @@ class MenuService
         ]);
     }
 
-    static function createKeyboards($userSite) {
+    static function createKeyboards($userSite)
+    {
         return CreateButtonKeyboard::create($userSite);
     }
 
-    public function createInlineKeyboards($userSite){
+    public function createInlineKeyboards($userSite)
+    {
         return CreateInLineKeyboard::create($userSite);
     }
 }
