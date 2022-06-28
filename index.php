@@ -13,12 +13,18 @@ require __DIR__ . '/src/Services/UserService.php';
 require __DIR__ . '/src/Services/TelegramSessionService.php';
 require __DIR__ . '/src/Services/MenuService.php';
 require __DIR__ . '/src/Services/TextMessageService.php';
+require __DIR__ . '/src/Services/CallbackService.php';
 require __DIR__ . '/src/Actions/Keyboard/CreateButtonKeyboard.php';
 require __DIR__ . '/src/Actions/Keyboard/CreateInLineKeyboard.php';
+require __DIR__ . '/src/Services/PageGenerator.php';
+require __DIR__ . '/src/Actions/Page/MainData.php';
+require __DIR__ . '/src/Actions/Page/StartData.php';
+require __DIR__ . '/src/Actions/Page/ProfileData.php';
+require __DIR__ . '/src/Services/ValidationService.php';
 
 
 use App\Botlogger\BotLogger;
-use App\Commands\StartCommand;
+use App\Messages\CallbackService;
 use App\Messages\TextMessageService;
 use App\User\UserService;
 use Telegram\Bot\Api;
@@ -28,21 +34,18 @@ $telegram =  new Api($key, true);
 
 function BotApp(Api $telegram)
 {
-    if(isset($telegram->getWebhookUpdate()['message']['text']) && !$telegram->getWebhookUpdate()['message']['from']['is_bot'])
-    {
-        UserService::checkUser($telegram->getWebhookUpdate()['message']['from']);
-/*        if ($telegram->getWebhookUpdate()['message']['text'] !== '/start')
-            $telegram->deleteMessage(['chat_id' => $telegram->getWebhookUpdate()['message']['from']['id'] , 'message_id' => $telegram->getWebhookUpdate()['message']['message_id']]);*/
+    //BotLogger::store($telegram->getWebhookUpdate());
 
-        $textMessage = new TextMessageService($telegram, $telegram->getWebhookUpdate()['message']);
+    if($telegram->getWebhookUpdate()->detectType() === 'message' && !$telegram->getWebhookUpdate()->getMessage()->getFrom()['is_bot'])
+    {
+        UserService::checkUser($telegram->getWebhookUpdate()->getMessage()->getFrom());
+        $textMessage = new TextMessageService($telegram);
         $textMessage->handler();
     }
-    elseif (isset($telegram->getWebhookUpdate()['callback_query']) && $telegram->getWebhookUpdate()['callback_query']['message']['from']['id'] == 5216479381)
+    elseif ($telegram->getWebhookUpdate()->detectType() === 'callback_query' && $telegram->getWebhookUpdate()->getMessage()->getFrom()->getId() == 5216479381)
     {
-        $telegram->sendMessage(['chat_id' => $telegram->getWebhookUpdate()['callback_query']['from']['id'], 'parse_mode' => 'HTML', 'text' => "This is - <b>CALLBACK!!!</b>"]);
-
-        //$callbackMessage = new CallbackHandlerService(Telegram::getWebhookUpdates()['callback_query']);
-        //$callbackMessage->handler();
+        $callbackMessage = new CallbackService($telegram);
+        $callbackMessage->handler();
     }
     else
     {

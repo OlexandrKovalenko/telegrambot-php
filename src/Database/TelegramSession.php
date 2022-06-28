@@ -24,7 +24,7 @@ class TelegramSession
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    function create($telegram_id, $last_activity)
+    function create($telegram_id, $last_activity = 'main_menu')
     {
         $stmt = $this->query->prepare(
             "INSERT INTO session (telegram_id, last_activity) values (:id, :last_activity)"

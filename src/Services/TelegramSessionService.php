@@ -10,9 +10,9 @@ use Carbon\Carbon;
 
 class TelegramSessionService
 {
-    function getSession($id, $last_activity){
+    static function getSession($id){
         $session = new TelegramSession();
-        return self::check($session, $id) ? self::check($session, $id) : $session->create($id, $last_activity);
+        return self::check($session, $id) ? self::check($session, $id) : $session->create($id);
     }
 
     static function setSession($id, $last_activity)
@@ -29,10 +29,9 @@ class TelegramSessionService
         {
             if ($session->find($id)->updated_at < Carbon::now()->timezone('Europe/Kiev')->subHour())
             {
-                $session->delete($id);
-                return false;
+                return $session->update($id, 'main_menu');
             } else {
-                return true;
+                return $session->find($id);
             }
         }
     }

@@ -4,29 +4,37 @@ namespace App\Messages\Menu;
 
 
 use App\Botlogger\BotLogger;
+use App\TelegramSession\TelegramSessionService;
 use Telegram\Bot\Api;
 use Telegram\Bot\Keyboard\Keyboard;
 
 class MenuService
 {
-    private $telegramId;
     private Api $telegram;
+    private $data;
 
-    function __construct($telegram, $id)
+    function __construct($telegram, $data)
     {
-        $this->telegramId = $id;
         $this->telegram = $telegram;
+        $this->data = $data;
     }
 
-    function showButtonsMenu($userSite, $botMessage)
+    public function showButtons($callback = null)
+    {
+        $this->data['botMessage'] ? $this->generateButtonMenu($this->data['userSite'], $this->data['botMessage']) : null;
+        $this->data['inlineMsg'] ? $this->generateInlineMenu($this->data['userSite'], $this->data['inlineMsg'], $callback) : null;
+        TelegramSessionService::setSession($this->data['id'], $this->data['userSite']);
+    }
+
+    private function generateButtonMenu($userSite, $botMessage)
     {
         $reply_markup = Keyboard::make([
             'keyboard' => $this->createKeyboards($userSite),
             'resize_keyboard' => true,
-            'one_time_keyboard' => false
+            'one_time_keyboard' => true
         ]);
-        $response = $this->telegram->sendMessage([
-            'chat_id' => $this->telegramId,
+        $response = $this->telegram->setAsyncRequest(true)->sendMessage([
+            'chat_id' => $this->data['id'],
             'parse_mode' => 'MarkdownV2',
             'text' => $botMessage,
             'reply_markup' => $reply_markup
@@ -35,24 +43,25 @@ class MenuService
         //$messageId = $response->getMessageId();
     }
 
-    function showInlineMenu($userSite, $botMessage)
+    private function generateInlineMenu($userSite, $botMessage, $callback)
     {
-        $reply_markup = json_encode($this->createInlineKeyboards($userSite), true);
-        $response = $this->telegram->sendMessage([
-            'chat_id' => $this->telegramId,
+        $reply_markup = json_encode($this->createInlineKeyboards($userSite, $callback), true);
+        $this->telegram->setAsyncRequest(true)->sendMessage([
+            'chat_id' => $this->data['id'],
             'parse_mode' => 'MarkdownV2',
             'text' => $botMessage,
             'reply_markup' => $reply_markup
         ]);
     }
 
-    static function createKeyboards($userSite)
+    private function createKeyboards($userSite)
     {
         return CreateButtonKeyboard::create($userSite);
     }
 
-    public function createInlineKeyboards($userSite)
+    private function createInlineKeyboards($userSite, $callback)
     {
-        return CreateInLineKeyboard::create($userSite);
+        return CreateInLineKeyboard::create($userSite, $callback);
     }
+
 }
