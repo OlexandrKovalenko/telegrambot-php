@@ -28,6 +28,11 @@ class PageGenerator
         $menu->showButtons();
     }
 
+    static function showRegion(Api $telegram, $data, $param = null)
+    {
+        $menu = new MenuService($telegram, $data);
+        $menu->showButtons($param);
+    }
     static function showConfirm(Api $telegram, $data, $callback)
     {
         $menu = new MenuService($telegram, $data);

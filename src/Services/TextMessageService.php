@@ -4,6 +4,7 @@ namespace App\Messages;
 
 
 use App\Botlogger\BotLogger;
+use App\Database\Region;
 use App\Database\User;
 use App\Messages\Menu\MenuService;
 use App\Messages\Menu\ValidationService;
@@ -34,6 +35,9 @@ class TextMessageService
         //$this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId]);
         $obj = new User();
         $this->user = $obj->findByTelegramId($this->telegramId);
+        $obj = new Region();
+        $this->region = $obj->getUserRegion($this->user->id);
+
     }
 
     function handler()
@@ -47,7 +51,7 @@ class TextMessageService
                 PageGenerator::showMain($this->telegram, MainData::generate($this->telegramId));
                 break;
             case 'Мой профиль':
-                PageGenerator::showProfile($this->telegram, ProfileData::generate($this->telegramId, $this->user));
+                PageGenerator::showProfile($this->telegram, ProfileData::generate($this->telegramId, $this->user, $this->region));
                 break;
         }
 
@@ -56,7 +60,7 @@ class TextMessageService
             $userSite = TelegramSessionService::getSession($this->telegramId)->last_activity;
             switch ($userSite)
             {
-                case 'main_menu/':
+                case 'main_menu':
                     PageGenerator::showMain($this->telegram, MainData::generate($this->telegramId));
                     break;
                 case 'my_offers':
@@ -79,14 +83,14 @@ class TextMessageService
                         else
                         {
                             $this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => $this->text.' Имя сохранено.']);
-                            PageGenerator::showProfile($this->telegram, ProfileData::generate($this->telegramId, $this->user));
+                            PageGenerator::showProfile($this->telegram, ProfileData::generate($this->telegramId, $this->user, $this->region));
                         }
                 break;
                 case 'update_phone':
                     if ($this->telegram->getWebhookUpdate()['message']['contact']['phone_number'] && ValidationService::validatePhone($this->telegram->getWebhookUpdate()['message']['contact']['phone_number'])
                     || $this->telegram->getWebhookUpdate()['message']['text'] && ValidationService::validatePhone($this->telegram->getWebhookUpdate()['message']['text']))
                     {
-                        PageGenerator::showProfile($this->telegram, ProfileData::generate($this->telegramId, $this->user));
+                        PageGenerator::showProfile($this->telegram, ProfileData::generate($this->telegramId, $this->user, $this->region));
                         TelegramSessionService::setSession($this->telegramId, 'my_profile');
                     }
                     else
