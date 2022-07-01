@@ -18,8 +18,11 @@ use Telegram\Bot\Keyboard\Keyboard;
 
 class CallbackService
 {
-    private $telegramId, $messageId, $сallback_data, $user;
+    private $telegramId, $messageId, $сallback_data;
     private Api $telegram;
+    private mixed $getUser;
+    private Region $region;
+    private User $user;
 
     public function __construct(Api $telegram)
     {
@@ -28,10 +31,10 @@ class CallbackService
         $this->telegramId = $this->telegram->getWebhookUpdate()['callback_query']['from']['id'];
         $this->messageId = $this->telegram->getWebhookUpdate()->getMessage()->getMessageId();
         $this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId]);
-        $obj = new User();
-        $this->user = $obj->findByTelegramId($this->telegramId);
-        $obj = new Region();
-        $this->region = $obj->getUserRegion($this->user->id);
+        $this->user = new User();
+        $this->getUser = $this->user->findByTelegramId($this->telegramId);
+        $this->region = new Region();
+        $this->getRegion = $this->region->getUserRegion($this->getUser->id);
     }
 
     function handler()
@@ -41,8 +44,6 @@ class CallbackService
             $this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => '<i>Время Вашей сессии уже истекло. Возвращаемся на главную.</i>']);
             PageGenerator::showMain($this->telegram, MainData::generate($this->telegramId));
         }
-
-        //count(explode("#", $this->сallback_data)) == 2 ? $data = explode("#", $this->сallback_data)[0]: $data = $this->сallback_data;
 
         switch ($this->сallback_data){
             case '@update_name_repeat':
@@ -73,20 +74,17 @@ class CallbackService
             case '@update_name_cancel':
             case '@update_lastName_cancel':
             case '@update_phone_cancel':
-                PageGenerator::showProfile($this->telegram, ProfileData::generate($this->telegramId, $this->user, $this->region));
+                PageGenerator::showProfile($this->telegram, ProfileData::generate($this->telegramId, $this->getUser, $this->getRegion));
             break;
+            case '@region_show':
             case '@update_region':
-                TelegramSessionService::setSession($this->telegramId, 'select_my_region');
-                PageGenerator::showRegion($this->telegram, RegionData::generate($this->telegramId));
+                $this->caseRegionShow();
                 break;
-            case (preg_match('/@my_region_#.*/', $this->сallback_data) ? $this->сallback_data : null):
-                TelegramSessionService::setSession($this->telegramId, 'select_my_city');
-                $this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => '*Ваш выбор области:* '.explode("#", $this->сallback_data)[1]]);
-                PageGenerator::showRegion($this->telegram, RegionData::generate($this->telegramId, 'select_my_city'), explode("#", $this->сallback_data)[1] );
+            case (preg_match('/@region#.*/', $this->сallback_data) ? $this->сallback_data : null):
+                $this->caseCityShow();
                 break;
-            case (preg_match('/@my_region_city_#.*/', $this->сallback_data) ? $this->сallback_data : null):
-                $this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => '*Ваш выбор:* '.explode("#", $this->сallback_data)[1]]);
-                PageGenerator::showProfile($this->telegram, ProfileData::generate($this->telegramId, $this->user, $this->region));
+            case (preg_match('/@region_city#.*/', $this->сallback_data) ? $this->сallback_data : null):
+                $this->caseCitySelected();
                 break;
             case '@my_offers':
                 TelegramSessionService::setSession($this->telegramId, 'update_address');
@@ -103,6 +101,39 @@ class CallbackService
                 PageGenerator::showMain($this->telegram, MainData::generate($this->telegramId));
                 break;
             default:
+        }
+    }
+
+    //TODO ACTIONS
+    private function caseRegionShow()
+    {
+        if ($this->сallback_data === '@update_region')
+        {
+            TelegramSessionService::setSession($this->telegramId, 'select_my_region');
+            PageGenerator::showRegion($this->telegram, RegionData::generate($this->telegramId), 'profile_region');
+        }
+    }
+
+    private function caseCityShow()
+    {
+        $data = explode("#", $this->сallback_data);
+
+        if ($data[1] === 'profile_region')
+        {
+            TelegramSessionService::setSession($this->telegramId, 'select_my_city');
+            PageGenerator::showRegion($this->telegram, RegionData::generate($this->telegramId, 'select_my_city'), 'profile_city', $data[2] );
+        }
+    }
+
+    private function caseCitySelected()
+    {
+        $data = explode("#", $this->сallback_data);
+        if ($data[1] === 'profile_city')
+        {
+            $city = $this->region->getCityBySlug($data[2]);
+            $this->getUser = $this->user->update($this->telegramId, ['located_city_id'=> $city->id]);
+            $this->getRegion = $this->region->getUserRegion($this->getUser->id);
+            PageGenerator::showProfile($this->telegram, ProfileData::generate($this->telegramId, $this->getUser, $this->getRegion));
         }
     }
 }

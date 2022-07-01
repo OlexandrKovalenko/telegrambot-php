@@ -23,16 +23,16 @@ class ValidationService
     }
 
     static function validatePhone($data) {
-        $check = function($phone)
-        {
-            if(strlen($phone) == 13 && mb_substr($phone, 0, 3) == '+38') return $phone;
-            elseif(strlen($phone) == 12 && mb_substr($phone, 0, 1) == '3') return '+'.$phone;
-            elseif(strlen($phone) == 11 && mb_substr($phone, 0, 1) == '8') return '+3'.$phone;
-            elseif(strlen($phone) == 10 && mb_substr($phone, 0, 1) == '0') return '+38'.$phone;
-            else return false;
-        };
+        /*        $check = function($phone)
+                {
+                    if(strlen($phone) == 13 && mb_substr($phone, 0, 3) == '+38') return $phone;
+                    elseif(strlen($phone) == 12 && mb_substr($phone, 0, 1) == '3') return '+'.$phone;
+                    elseif(strlen($phone) == 11 && mb_substr($phone, 0, 1) == '8') return '+3'.$phone;
+                    elseif(strlen($phone) == 10 && mb_substr($phone, 0, 1) == '0') return '+38'.$phone;
+                    else return false;
+                };*/
         $pattern = "/^\+380\d{3}\d{2}\d{2}\d{2}$/";
-        if(preg_match($pattern, $check($data))) return true;
+        if(preg_match($pattern, self::phoneNumFixer($data))) return true;
         else false;
     }
 
@@ -55,5 +55,14 @@ class ValidationService
         $arr = ['главное меню', 'мой профиль', 'главная', ];
         if (in_array($data, $arr)) return '<i>- Это не имя.</i>';
         else false;
+    }
+
+    static function phoneNumFixer($phone)
+    {
+        if(strlen($phone) == 13 && mb_substr($phone, 0, 3) == '+38') return $phone;
+        elseif(strlen($phone) == 12 && mb_substr($phone, 0, 1) == '3') return '+'.$phone;
+        elseif(strlen($phone) == 11 && mb_substr($phone, 0, 1) == '8') return '+3'.$phone;
+        elseif(strlen($phone) == 10 && mb_substr($phone, 0, 1) == '0') return '+38'.$phone;
+        else return null;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Database;
 
+use App\Botlogger\BotLogger;
 use Exception;
 use PDO;
 
@@ -17,9 +18,9 @@ class User
 
     function find($id)
     {
-            $stmt = $this->query->prepare('SELECT * FROM user where id = ?');
-            $stmt->execute([$id]);
-            return $stmt->fetch(PDO::FETCH_OBJ);
+        $stmt = $this->query->prepare('SELECT * FROM user where id = ?');
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
     function findByTelegramId($telegram_id)
@@ -49,12 +50,12 @@ class User
     function update($id, $data): object
     {
         $row = key($data);
-        $sql = "UPDATE user SET $row=:data WHERE id=:id";
+        $sql = "UPDATE user SET $row=:data WHERE telegram_id=:id";
         $stmt = $this->query->prepare($sql);
         $stmt->execute([
             ':data' => $data[$row],
             ':id' => $id
         ]);
-        return self::find($id);
+        return self::findByTelegramId($id);
     }
 }

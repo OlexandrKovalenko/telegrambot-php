@@ -9,7 +9,7 @@ use App\Database\Region;
 
 class CreateRegionInlineKeyboard
 {
-    static function create($type, $param = null)
+    static function create($type, $callback, $param)
     {
         $region = new Region();
         $arr = [];
@@ -34,7 +34,7 @@ class CreateRegionInlineKeyboard
             for($i = 0; $i < count($arr); $i++)
             {
                 $keyboard['inline_keyboard'][$i] = [
-                    ['text' => $arr[array_keys($arr)[$i]][0]['region'], 'callback_data' => "@my_region_#".array_keys($arr)[$i]]
+                    ['text' => $arr[array_keys($arr)[$i]][0]['region'], 'callback_data' => "@region#$callback#".array_keys($arr)[$i]]
                 ];
             }
             $keyboard['inline_keyboard'][count($keyboard['inline_keyboard'])] = [
@@ -49,15 +49,15 @@ class CreateRegionInlineKeyboard
                 if ($index == $rows)
                 {
                     $keyboard['inline_keyboard'][$index] = [
-                        ['text' => $arr[$param][$i]['city'], 'callback_data' => "@my_region_city_#".$arr[$param][$i]['city_slug']],
+                        ['text' => $arr[$param][$i]['city'], 'callback_data' => "@region_city#$callback#".$arr[$param][$i]['city_slug']],
                         ['text' => hex2bin('F09F9383')."В главное меню...".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
                     ];
                 }
                 else
                 {
                     $keyboard['inline_keyboard'][$index] = [
-                        ['text' => $arr[$param][$i]['city'], 'callback_data' => "@my_region_city_#".$arr[$param][$i]['city_slug']],
-                        ['text' => $arr[$param][$i+1]['city'], 'callback_data' => "@my_region_city_#".$arr[$param][$i+1]['city_slug']]
+                        ['text' => $arr[$param][$i]['city'], 'callback_data' => "@region_city#$callback#".$arr[$param][$i]['city_slug']],
+                        ['text' => $arr[$param][$i+1]['city'], 'callback_data' => "@region_city#$callback#".$arr[$param][$i+1]['city_slug']]
                     ];
                     $i++;
                     $index++;

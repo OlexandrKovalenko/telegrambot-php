@@ -19,10 +19,10 @@ class MenuService
         $this->data = $data;
     }
 
-    public function showButtons($param = null)
+    public function showButtons($callback = null, $param = null)
     {
         $this->data['botMessage'] ? $this->generateButtonMenu($this->data['userSite'], $this->data['botMessage']) : null;
-        $this->data['inlineMsg'] ? $this->generateInlineMenu($this->data['userSite'], $this->data['inlineMsg'], $param) : null;
+        $this->data['inlineMsg'] ? $this->generateInlineMenu($this->data['userSite'], $this->data['inlineMsg'],$callback, $param) : null;
         TelegramSessionService::setSession($this->data['id'], $this->data['userSite']);
     }
 
@@ -43,13 +43,13 @@ class MenuService
         //$messageId = $response->getMessageId();
     }
 
-    private function generateInlineMenu($userSite, $botMessage, $param)
+    private function generateInlineMenu($userSite, $botMessage, $callback, $param)
     {
 
-        $reply_markup = json_encode($this->createInlineKeyboards($userSite, $param), true);
+        $reply_markup = json_encode($this->createInlineKeyboards($userSite, $callback, $param), true);
         $this->telegram->setAsyncRequest(true)->sendMessage([
             'chat_id' => $this->data['id'],
-            'parse_mode' => 'MarkdownV2',
+            'parse_mode' => 'HTML',
             'text' => $botMessage,
             'reply_markup' => $reply_markup
         ]);
@@ -60,9 +60,9 @@ class MenuService
         return CreateButtonKeyboard::create($userSite);
     }
 
-    private function createInlineKeyboards($userSite, $callback)
+    private function createInlineKeyboards($userSite, $callback, $param)
     {
-        return CreateInLineKeyboard::create($userSite, $callback);
+        return CreateInLineKeyboard::create($userSite, $callback, $param);
     }
 
 }

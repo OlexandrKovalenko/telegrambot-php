@@ -11,6 +11,8 @@ require __DIR__ . '/src/Database/TelegramSession.php';
 require __DIR__ . '/src/Database/Region.php';
 require __DIR__ . '/src/Actions/BotLogger.php';
 require __DIR__ . '/src/Actions/Translit.php';
+require __DIR__ . '/src/Actions/MyProfile/MyRegionCitySelector.php';
+require __DIR__ . '/src/Actions/MyProfile/StoreMyCity.php';
 require __DIR__ . '/src/Services/UserService.php';
 require __DIR__ . '/src/Services/TelegramSessionService.php';
 require __DIR__ . '/src/Services/MenuService.php';

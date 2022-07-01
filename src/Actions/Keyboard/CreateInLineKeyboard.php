@@ -5,7 +5,7 @@ namespace App\Messages\Menu;
 
 class CreateInLineKeyboard
 {
-    static function create($userSite, $param): array
+    static function create($userSite, $callback, $param): array
     {
         switch ($userSite){
             case 'my_profile':
@@ -28,9 +28,9 @@ class CreateInLineKeyboard
                     ]
                 );
             case 'select_my_region':
-                return CreateRegionInlineKeyboard::create('region');
+                return CreateRegionInlineKeyboard::create('region', $callback, $param);
             case 'select_my_city':
-                return CreateRegionInlineKeyboard::create('city', $param);
+                return CreateRegionInlineKeyboard::create('city', $callback, $param);
             case 'catalog':
                 return array(
                     'inline_keyboard' => []);
@@ -38,8 +38,8 @@ class CreateInLineKeyboard
                 return array(
                     'inline_keyboard' => [
                         [
-                            ['text' => hex2bin('E29C85')." Да", 'callback_data' => $param.'_repeat'],
-                            ['text' => hex2bin('E29D8C').' Нет', 'callback_data' => $param.'_cancel'],
+                            ['text' => hex2bin('E29C85')." Да", 'callback_data' => $callback.'_repeat'],
+                            ['text' => hex2bin('E29D8C').' Нет', 'callback_data' => $callback.'_cancel'],
                         ],
                     ]
                 );

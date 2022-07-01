@@ -35,6 +35,13 @@ class Region
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
+    function getCityBySlug($slug)
+    {
+        $stmt = $this->query->prepare("SELECT * FROM located_city WHERE city_slug = ?");
+        $stmt->execute([$slug]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
     //private $userCity = "SELECT located_city.city, located_city.is_active FROM located_city
      //   JOIN USER ON USER.located_city_id = located_city.id WHERE USER.id = 1";
 }
