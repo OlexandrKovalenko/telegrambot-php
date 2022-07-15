@@ -38,7 +38,7 @@ class CreateRegionInlineKeyboard
                 ];
             }
             $keyboard['inline_keyboard'][count($keyboard['inline_keyboard'])] = [
-                ['text' => hex2bin('F09F9383')."В главное меню...".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
+                ['text' => "В главное меню... ".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
             ];
         }
         elseif ($type === 'city') {
@@ -50,7 +50,7 @@ class CreateRegionInlineKeyboard
                 {
                     $keyboard['inline_keyboard'][$index] = [
                         ['text' => $arr[$param][$i]['city'], 'callback_data' => "@region_city#$callback#".$arr[$param][$i]['city_slug']],
-                        ['text' => hex2bin('F09F9383')."В главное меню...".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
+                        ['text' => "В главное меню... ".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
                     ];
                 }
                 else

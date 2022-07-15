@@ -47,9 +47,11 @@ class TextMessageService
                 PageGenerator::showStart($this->telegram, StartData::generate($this->telegramId));
                 break;
             case 'Главное меню':
+                $this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId]);
                 PageGenerator::showMain($this->telegram, MainData::generate($this->telegramId));
                 break;
             case 'Мой профиль':
+                $this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId-1]);
                 PageGenerator::showProfile($this->telegram, ProfileData::generate($this->telegramId, $this->getUser, $this->getRegion));
                 break;
         }

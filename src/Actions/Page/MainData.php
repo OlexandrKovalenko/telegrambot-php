@@ -13,7 +13,7 @@ class MainData
         return [
             'id'=>$id,
             'userSite'=>$userSite,
-            'botMessage'=>$botMessage
+            'botMessage'=>$botMessage,
         ];
     }
 }

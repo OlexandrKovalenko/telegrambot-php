@@ -9,7 +9,8 @@ use Carbon\Carbon;
 
 class BotLogger
 {
-    static function store($data)
+    static function
+    store($data)
     {
         $currentDate = Carbon::now();
         file_put_contents('log.txt',

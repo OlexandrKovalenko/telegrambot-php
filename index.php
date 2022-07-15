@@ -9,27 +9,34 @@ require __DIR__ . '/src/Database/DBConnect.php';
 require __DIR__ . '/src/Database/User.php';
 require __DIR__ . '/src/Database/TelegramSession.php';
 require __DIR__ . '/src/Database/Region.php';
+require __DIR__ . '/src/Database/Category.php';
+require __DIR__ . '/src/Database/Offer.php';
 require __DIR__ . '/src/Actions/BotLogger.php';
 require __DIR__ . '/src/Actions/Translit.php';
-require __DIR__ . '/src/Actions/MyProfile/MyRegionCitySelector.php';
-require __DIR__ . '/src/Actions/MyProfile/StoreMyCity.php';
-require __DIR__ . '/src/Services/UserService.php';
-require __DIR__ . '/src/Services/TelegramSessionService.php';
-require __DIR__ . '/src/Services/MenuService.php';
-require __DIR__ . '/src/Services/TextMessageService.php';
-require __DIR__ . '/src/Services/CallbackService.php';
-require __DIR__ . '/src/Actions/Keyboard/CreateButtonKeyboard.php';
-require __DIR__ . '/src/Actions/Keyboard/CreateInLineKeyboard.php';
-require __DIR__ . '/src/Actions/Keyboard/CreateRegionInlineKeyboard.php';
 require __DIR__ . '/src/Services/PageGenerator.php';
 require __DIR__ . '/src/Actions/Page/MainData.php';
 require __DIR__ . '/src/Actions/Page/StartData.php';
 require __DIR__ . '/src/Actions/Page/ProfileData.php';
 require __DIR__ . '/src/Actions/Page/RegionData.php';
+require __DIR__ . '/src/Actions/Page/MyOffersData.php';
+require __DIR__ . '/src/Actions/Page/EditOfferData.php';
+require __DIR__ . '/src/Actions/Page/CategoriesData.php';
+require __DIR__ . '/src/Services/UserService.php';
+require __DIR__ . '/src/Services/TelegramSessionService.php';
+require __DIR__ . '/src/Services/MenuService.php';
+require __DIR__ . '/src/Services/TextMessageService.php';
+require __DIR__ . '/src/Services/CallbackService.php';
+require __DIR__ . '/src/Services/OfferService.php';
+require __DIR__ . '/src/Actions/Keyboard/CreateButtonKeyboard.php';
+require __DIR__ . '/src/Actions/Keyboard/CreateInLineKeyboard.php';
+require __DIR__ . '/src/Actions/Keyboard/CreateRegionInlineKeyboard.php';
+require __DIR__ . '/src/Actions/Keyboard/CreateOfferInlineKeyboard.php';
+require __DIR__ . '/src/Actions/Keyboard/CreateEditMyOfferInlineKeyboard.php';
 require __DIR__ . '/src/Services/ValidationService.php';
 
 
 use App\Botlogger\BotLogger;
+use App\Database\Category;
 use App\Database\Region;
 use App\Messages\CallbackService;
 use App\Messages\Menu\CreateRegionInlineKeyboard;
@@ -42,8 +49,6 @@ $telegram =  new Api($key, true);
 
 function BotApp(Api $telegram)
 {
-    //BotLogger::store($telegram->getWebhookUpdate());
-
     if($telegram->getWebhookUpdate()->detectType() === 'message' && !$telegram->getWebhookUpdate()->getMessage()->getFrom()['is_bot'])
     {
         UserService::checkUser($telegram->getWebhookUpdate()->getMessage()->getFrom());
@@ -62,3 +67,4 @@ function BotApp(Api $telegram)
 }
 
 BotApp($telegram);
+

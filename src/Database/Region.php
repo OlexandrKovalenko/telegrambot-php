@@ -26,7 +26,7 @@ class Region
 
     function getUserRegion($id)
     {
-        $userRegion = "SELECT located_region.region,located_city.city, located_region.is_active 
+        $userRegion = "SELECT located_region.region,located_city.city, located_region.is_active, located_city_id
         FROM located_region join located_city on located_city.region_id = located_region.id 
         join user on user.located_city_id = located_city.id where user.id = :id";
 
@@ -39,6 +39,13 @@ class Region
     {
         $stmt = $this->query->prepare("SELECT * FROM located_city WHERE city_slug = ?");
         $stmt->execute([$slug]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    function getCityById($id)
+    {
+        $stmt = $this->query->prepare("SELECT * FROM located_city WHERE id = ?");
+        $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 

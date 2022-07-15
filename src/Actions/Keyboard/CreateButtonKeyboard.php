@@ -9,7 +9,8 @@ class CreateButtonKeyboard
     {
         switch ($userSite){
             case 'start':
-                return [
+            case 'my_offers':
+            return [
                     ['Главное меню', 'Мой профиль']
                 ];
             case 'main_menu':

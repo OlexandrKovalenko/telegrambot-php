@@ -33,9 +33,28 @@ class PageGenerator
         $menu = new MenuService($telegram, $data);
         $menu->showButtons($callback, $param);
     }
+
     static function showConfirm(Api $telegram, $data, $callback)
     {
         $menu = new MenuService($telegram, $data);
         $menu->showButtons($callback);
+    }
+
+    static function showMyOffers(Api $telegram, $data, $param)
+    {
+        $menu = new MenuService($telegram, $data);
+        $menu->showButtons(null, $param);
+    }
+
+    static function EditOffer(Api $telegram, $data, $param)
+    {
+        $menu = new MenuService($telegram, $data);
+        $menu->showButtons(null, $param);
+    }
+
+    static function showCategories(Api $telegram, $data, $callback = null, $param = null)
+    {
+        $menu = new MenuService($telegram, $data);
+        $menu->showButtons($callback, $param);
     }
 }
