@@ -5,16 +5,17 @@ namespace App\Services;
 
 
 use App\Actions\BotLogger;
-use App\Actions\Keyboard\InlineButtonsForEditOffers;
-use App\Actions\Keyboard\InlineButtonsForMyOffersList;
+use App\Actions\CallbackActionCase\CaseCategorySelect;
+use App\Actions\CallbackActionCase\CaseCategoryShow;
+use App\Actions\CallbackActionCase\CaseCitySelect;
+use App\Actions\CallbackActionCase\CaseCityShow;
+use App\Actions\CallbackActionCase\CaseEditMyOffer;
+use App\Actions\CallbackActionCase\CaseMyOffers;
+use App\Actions\CallbackActionCase\CaseRegionShow;
+use App\Actions\CallbackActionCase\CaseUpdateMyOffer;
 use App\Actions\Keyboard\InlineButtonsForMyProfile;
-use App\Actions\Keyboard\InlineButtonsRegionSelector;
-use App\Actions\Page\CategoriesData;
-use App\Actions\Page\EditOfferData;
 use App\Actions\Page\MainData;
-use App\Actions\Page\MyOffersData;
 use App\Actions\Page\ProfileData;
-use App\Actions\Page\RegionData;
 use App\Database\Category;
 use App\Database\Offer;
 use App\Database\Region;
@@ -91,35 +92,43 @@ class CallbackService
                     'request_contact' => true,
                     'reply_markup' => $reply_markup]);
                 break;
-            case '@region_show':
             case '@update_region':
-                $this->caseRegionShow();
+                $data = explode("#", $this->сallback_data);
+                CaseRegionShow::show($this->telegram, $this->telegramId, $this->messageId, $data);
+                break;
+            case '@update_category':
+                $data = explode("#", $this->сallback_data);
+                CaseCategoryShow::show($this->telegram, $this->telegramId, $this->messageId, $data);
                 break;
             case (preg_match('/@region#.*/', $this->сallback_data) ? $this->сallback_data : null):
-                $this->caseCityShow();
+                $data = explode("#", $this->сallback_data);
+                CaseCityShow::show($this->telegram, $this->telegramId, $this->messageId, $data);
                 break;
             case (preg_match('/@region_city#.*/', $this->сallback_data) ? $this->сallback_data : null):
-                $this->caseCitySelected();
+                $data = explode("#", $this->сallback_data);
+                CaseCitySelect::select($this->telegram, $this->telegramId, $this->messageId, $data);
                 break;
             case '@create_new_offer':
                 //$this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => '*Ваши заявки:*']);
                 //OfferService::create($this->getUser->id, $this->getRegion->located_city_id);
                 //$this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId-1]);
             case '@my_offers':
-                $this->caseMyOffers();
+                CaseMyOffers::show($this->telegram, $this->telegramId, $this->messageId);
                 break;
             case (preg_match('/@my_offer_edit#.*/', $this->сallback_data) ? $this->сallback_data : null):
-                $this->caseEditMyOffer();
+                $data = explode("#", $this->сallback_data);
+                CaseEditMyOffer::edit($this->telegram, $this->telegramId, $this->messageId, $data);
                 break;
             case (preg_match('/@my_offer_update#.*/', $this->сallback_data) ? $this->сallback_data : null):
-                $this->caseUpdateMyOffer();
+                $data = explode("#", $this->сallback_data);
+                CaseUpdateMyOffer::update($this->telegram, $this->telegramId, $this->messageId, $data);
                 break;
             case (preg_match('/@category#.*/', $this->сallback_data) ? $this->сallback_data : null):
-                $this->caseCategory();
+                $data = explode("#", $this->сallback_data);
+                CaseCategorySelect::select($this->telegram, $this->telegramId, $this->messageId, $data);
                 break;
             case '@main_menu':
                 $this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId]);
-                //TelegramSessionService::setSession($this->telegramId, 'main_menu');
                 $this->telegram->answerCallbackQuery([
                     'callback_query_id' => $this->telegram->getWebhookUpdate()['callback_query']['id'],
                     'text'=>'На главную...',
@@ -130,119 +139,5 @@ class CallbackService
                 break;
             default:
         }
-    }
-
-    //TODO ACTIONS
-    // Actions\caseRegionShow
-    private function caseRegionShow($data = null)
-    {
-        if ($this->сallback_data === '@update_region')
-        {
-            TelegramSessionService::setSession($this->telegramId, 'select_my_region');
-            PageGenerator::generate($this->telegram, RegionData::generate($this->telegramId, $this->messageId),
-                InlineButtonsRegionSelector::prepare(['type' => 'region', 'callback' => 'profile_region']));
-        }
-        elseif ($data[0] === '@my_offer_update' && $data[1] === 'region')
-        {
-            TelegramSessionService::setSession($this->telegramId, 'select_my_offer_region');
-            PageGenerator::generate($this->telegram, RegionData::generate($this->telegramId, $this->messageId),
-                InlineButtonsRegionSelector::prepare(['type' => 'region', 'callback' => "my_offer_region#$data[2]"]));
-        }
-    }
-
-    private function caseCityShow()
-    {
-        $data = explode("#", $this->сallback_data);
-
-        if ($data[1] === 'profile_region')
-        {
-            TelegramSessionService::setSession($this->telegramId, 'select_my_city');
-            PageGenerator::generate($this->telegram, RegionData::generate($this->telegramId, $this->messageId, 'select_my_city'),
-                InlineButtonsRegionSelector::prepare(['type' => 'city', 'callback' => 'profile_city', 'citySlug' => $data[2]]));
-        }
-        elseif ($data[1] === 'my_offer_region')
-        {
-            TelegramSessionService::setSession($this->telegramId, 'select_my_offer_city');
-            PageGenerator::generate($this->telegram, RegionData::generate($this->telegramId, $this->messageId, 'select_my_city'),
-                InlineButtonsRegionSelector::prepare(['type' => 'city', 'callback' => 'my_offer_city', 'offerSlug' => $data[2], 'citySlug' => $data[3]]));
-        }
-    }
-
-    private function caseCitySelected()
-    {
-        $data = explode("#", $this->сallback_data);
-        if ($data[1] === 'profile_city')
-        {
-            $city = $this->region->getCityBySlug($data[2]);
-            $this->getUser = $this->user->update($this->telegramId, ['located_city_id'=> $city->id]);
-            $this->getRegion = $this->region->getUserRegion($this->getUser->id);
-            PageGenerator::generate($this->telegram, ProfileData::generate($this->telegramId, $this->getUser, $this->getRegion, $this->messageId), InlineButtonsForMyProfile::prepare());
-
-        }
-        elseif ($data[1] === 'my_offer_city')
-        {
-            $city = $this->region->getCityBySlug($data[3]);
-            $this->offer->updateOffer($this->offer->getOfferBySlug($data[2])->id, ['city_id' => $city->id]);
-            $this->caseMyOffers();
-        }
-    }
-
-    private function caseMyOffers()
-    {
-        $offers = OfferService::getOffersByUserId($this->getUser->id);
-
-        PageGenerator::generate($this->telegram, MyOffersData::generate($this->telegramId, $this->messageId, $this->prepareOffersData($offers)), InlineButtonsForMyOffersList::prepare($this->prepareOffersData($offers)));
-        TelegramSessionService::setSession($this->telegramId, 'my_offers');
-    }
-
-    private function caseEditMyOffer()
-    {
-        $data = explode("#", $this->сallback_data);
-        $offer = OfferService::showBySlug($data[1]);
-
-        if ($offer->user_id == $this->getUser->id)
-        {
-            $offer->city = $this->region->getCityById($offer->city_id)->city;
-            $offer->category = $this->category->getCategoryById($offer->category_id)->category;
-            $offer->callbackdata = '@my_offer_update';
-            $offer->msgId = $this->messageId;
-            PageGenerator::generate($this->telegram, EditOfferData::generate($this->telegramId, $offer), InlineButtonsForEditOffers::prepare($offer));
-        }
-    }
-
-    private function prepareOffersData($offers)
-    {
-        foreach ($offers as $offer)
-        {
-            $offer->city = $this->region->getCityById($offer->city_id)->city;
-            $offer->category = $this->category->getCategoryById($offer->category_id)->category;
-        }
-        return $offers;
-    }
-
-    private function caseUpdateMyOffer()
-    {
-        $data = explode("#", $this->сallback_data);
-
-        switch ($data[1])
-        {
-            case 'region':
-                $this->caseRegionShow($data);
-                break;
-            case 'category':
-                $this->caseCategory();
-                break;
-        }
-    }
-
-    private function caseCategory($data = null)
-    {
-        $this->category->getAll();
-        if ($data[0] === '@my_offer_update' && $data[1] === 'category')
-        {
-            PageGenerator::generate($this->telegram, CategoriesData::generate($this->telegramId, $this->messageId, 'select_my_offer_category'), 'profile_region', );
-
-        }
-
     }
 }

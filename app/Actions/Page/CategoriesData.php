@@ -8,7 +8,7 @@ class CategoriesData
 {
     static function generate($id, $msgId, $userSite)
     {
-        $inLineMsg = "Выберите категорию";
+        $inLineMsg = "Выберите категорию:";
         return [
             'id' => $id,
             'userSite' => $userSite,

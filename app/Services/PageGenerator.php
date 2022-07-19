@@ -19,10 +19,4 @@ class PageGenerator
         $menu = new MenuService($telegram, $data, $menuData);
         $menu->showButtons();
     }
-
-    static function showCategories(Api $telegram, $data, $callback = null, $param = null)
-    {
-        $menu = new MenuService($telegram, $data);
-        $menu->showButtons();
-    }
 }

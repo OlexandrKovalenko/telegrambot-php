@@ -2,8 +2,10 @@
 
 namespace App\Database;
 
+use App\Actions\BotLogger;
 use Exception;
 use PDO;
+use PDOException;
 
 class User
 {

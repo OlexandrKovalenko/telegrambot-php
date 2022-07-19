@@ -1,7 +1,7 @@
 <?php
 
 namespace App;
-#error_reporting(0);
+error_reporting(0);
 require __DIR__ . '/vendor/autoload.php';
 /*require __DIR__ . '/env.php';
 require __DIR__ . '/app/Database/DBConnect.php';
@@ -38,6 +38,7 @@ require __DIR__ . '/app/Services/ValidationService.php';*/
 
 //require __DIR__ . '/app/Actions/Keyboard/InlineButtonsRegionSelector.php';
 
+use App\Actions\Keyboard\InlineButtonCategorySelector;
 use App\Actions\Keyboard\InlineButtonsRegionSelector;
 use App\Actions\Page\RegionData;
 use App\Database\Category;
@@ -45,6 +46,7 @@ use App\Services\CallbackService;
 use App\Services\PageGenerator;
 use App\Services\TextMessageService;
 use App\Services\UserService;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Telegram\Bot\Api;
 
 $key = env::TELEGRAMKEY;

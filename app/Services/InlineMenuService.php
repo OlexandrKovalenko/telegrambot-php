@@ -52,7 +52,7 @@ class InlineMenuService
             case 'my_offers':
                 $keyboard['inline_keyboard'][$rowIndex] = [
                     ['text' => hex2bin('E29E95')." Новая заявка", 'callback_data' => "@main_menu"],
-                    ['text' => hex2bin('F09F9499')." Профиль... ", 'callback_data' => "@my_profile"],
+                    ['text' => " Профиль... " . hex2bin('F09F9499'), 'callback_data' => "@my_profile"],
                 ];
                 break;
             case 'my_offer_update':
@@ -65,6 +65,12 @@ class InlineMenuService
                 $keyboard['inline_keyboard'][$rowIndex] = [
                     ['text' => hex2bin('F09F9499')." Профиль... ", 'callback_data' => "@my_profile"],
                     ['text' => "В главное меню... ".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
+                ];
+                break;
+            case 'category':
+                $keyboard['inline_keyboard'][$rowIndex] = [
+                    ['text' => hex2bin('F09F9499') . " В главное меню... ", 'callback_data' => "@my_offers"],
+                    ['text' => " Профиль... " . hex2bin('F09F9499'), 'callback_data' => "@my_profile"],
                 ];
                 break;
         }

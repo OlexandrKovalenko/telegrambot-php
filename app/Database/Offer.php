@@ -4,6 +4,7 @@
 namespace App\Database;
 
 
+use App\Actions\BotLogger;
 use PDO;
 use PDOException;
 
