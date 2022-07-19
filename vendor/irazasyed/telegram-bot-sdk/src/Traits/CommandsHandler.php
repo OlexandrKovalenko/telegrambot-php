@@ -3,8 +3,8 @@
 namespace Telegram\Bot\Traits;
 
 use Psr\Http\Message\RequestInterface;
-use Telegram\Bot\Objects\Update;
 use Telegram\Bot\Commands\CommandBus;
+use Telegram\Bot\Objects\Update;
 
 /**
  * CommandsHandler.
@@ -111,7 +111,7 @@ trait CommandsHandler
      *
      * @param string $name   Command Name
      * @param Update $update Update Object
-     * @param null   $entity
+     * @param array|null $entity
      *
      * @return mixed
      */

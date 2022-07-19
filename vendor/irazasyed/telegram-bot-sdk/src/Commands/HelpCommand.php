@@ -15,7 +15,7 @@ class HelpCommand extends Command
     /**
      * @var array Command Aliases
      */
-    //protected $aliases = ['listcommands'];
+    protected $aliases = ['listcommands'];
 
     /**
      * @var string Command Description
@@ -32,7 +32,7 @@ class HelpCommand extends Command
         $text = '';
         foreach ($commands as $name => $handler) {
             /* @var Command $handler */
-            $text .= sprintf('/%s - %s'.PHP_EOL, $name, $handler->getDescription());
+            $text .= sprintf('/%s - %s' . PHP_EOL, $name, $handler->getDescription());
         }
 
         $this->replyWithMessage(compact('text'));

@@ -183,7 +183,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     /**
      * @var array
      */
-    private $data;
+    protected $data;
 
     /**
      * @var int|string

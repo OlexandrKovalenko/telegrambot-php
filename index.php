@@ -1,47 +1,50 @@
 <?php
 
 namespace App;
-error_reporting(0);
-
+#error_reporting(0);
 require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/env.php';
-require __DIR__ . '/src/Database/DBConnect.php';
-require __DIR__ . '/src/Database/User.php';
-require __DIR__ . '/src/Database/TelegramSession.php';
-require __DIR__ . '/src/Database/Region.php';
-require __DIR__ . '/src/Database/Category.php';
-require __DIR__ . '/src/Database/Offer.php';
-require __DIR__ . '/src/Actions/BotLogger.php';
-require __DIR__ . '/src/Actions/Translit.php';
-require __DIR__ . '/src/Services/PageGenerator.php';
-require __DIR__ . '/src/Actions/Page/MainData.php';
-require __DIR__ . '/src/Actions/Page/StartData.php';
-require __DIR__ . '/src/Actions/Page/ProfileData.php';
-require __DIR__ . '/src/Actions/Page/RegionData.php';
-require __DIR__ . '/src/Actions/Page/MyOffersData.php';
-require __DIR__ . '/src/Actions/Page/EditOfferData.php';
-require __DIR__ . '/src/Actions/Page/CategoriesData.php';
-require __DIR__ . '/src/Services/UserService.php';
-require __DIR__ . '/src/Services/TelegramSessionService.php';
-require __DIR__ . '/src/Services/MenuService.php';
-require __DIR__ . '/src/Services/TextMessageService.php';
-require __DIR__ . '/src/Services/CallbackService.php';
-require __DIR__ . '/src/Services/OfferService.php';
-require __DIR__ . '/src/Actions/Keyboard/CreateButtonKeyboard.php';
-require __DIR__ . '/src/Actions/Keyboard/CreateInLineKeyboard.php';
-require __DIR__ . '/src/Actions/Keyboard/CreateRegionInlineKeyboard.php';
-require __DIR__ . '/src/Actions/Keyboard/CreateOfferInlineKeyboard.php';
-require __DIR__ . '/src/Actions/Keyboard/CreateEditMyOfferInlineKeyboard.php';
-require __DIR__ . '/src/Services/ValidationService.php';
+/*require __DIR__ . '/env.php';
+require __DIR__ . '/app/Database/DBConnect.php';
+require __DIR__ . '/app/Database/User.php';
+require __DIR__ . '/app/Database/TelegramSession.php';
+require __DIR__ . '/app/Database/Region.php';
+require __DIR__ . '/app/Database/Category.php';
+require __DIR__ . '/app/Database/Offer.php';
+require __DIR__ . '/app/Actions/BotLogger.php';
+require __DIR__ . '/app/Actions/Translit.php';
+require __DIR__ . '/app/Services/PageGenerator.php';
+require __DIR__ . '/app/Actions/Page/MainData.php';
+require __DIR__ . '/app/Actions/Page/StartData.php';
+require __DIR__ . '/app/Actions/Page/ProfileData.php';
+require __DIR__ . '/app/Actions/Page/RegionData.php';
+require __DIR__ . '/app/Actions/Page/MyOffersData.php';
+require __DIR__ . '/app/Actions/Page/EditOfferData.php';
+require __DIR__ . '/app/Actions/Page/CategoriesData.php';
+require __DIR__ . '/app/Services/InlineMenuService.php';
+require __DIR__ . '/app/Services/UserService.php';
+require __DIR__ . '/app/Services/TelegramSessionService.php';
+require __DIR__ . '/app/Services/MenuService.php';
+require __DIR__ . '/app/Services/TextMessageService.php';
+require __DIR__ . '/app/Services/CallbackService.php';
+require __DIR__ . '/app/Services/OfferService.php';
+require __DIR__ . '/app/Actions/Keyboard/CreateButtonKeyboard.php';
+require __DIR__ . '/app/Actions/Keyboard/CreateInLineKeyboard.php';
+require __DIR__ . '/app/Actions/Keyboard/CreateRegionInlineKeyboard.php';
+require __DIR__ . '/app/Actions/Keyboard/CreateOfferInlineKeyboard.php';
+require __DIR__ . '/app/Actions/Keyboard/CreateEditMyOfferInlineKeyboard.php';
+require __DIR__ . '/app/Actions/Keyboard/InlineButtonsForMyProfile.php';
+require __DIR__ . '/app/Actions/Keyboard/InlineButtonsForMyOffersList.php';
+require __DIR__ . '/app/Services/ValidationService.php';*/
 
+//require __DIR__ . '/app/Actions/Keyboard/InlineButtonsRegionSelector.php';
 
-use App\Botlogger\BotLogger;
+use App\Actions\Keyboard\InlineButtonsRegionSelector;
+use App\Actions\Page\RegionData;
 use App\Database\Category;
-use App\Database\Region;
-use App\Messages\CallbackService;
-use App\Messages\Menu\CreateRegionInlineKeyboard;
-use App\Messages\TextMessageService;
-use App\User\UserService;
+use App\Services\CallbackService;
+use App\Services\PageGenerator;
+use App\Services\TextMessageService;
+use App\Services\UserService;
 use Telegram\Bot\Api;
 
 $key = env::TELEGRAMKEY;
@@ -67,4 +70,3 @@ function BotApp(Api $telegram)
 }
 
 BotApp($telegram);
-
