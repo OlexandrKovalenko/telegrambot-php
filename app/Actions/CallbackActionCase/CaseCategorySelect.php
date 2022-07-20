@@ -8,7 +8,6 @@ use App\Actions\Keyboard\InlineButtonsForMyProfile;
 use App\Actions\Page\ProfileData;
 use App\Database\Category;
 use App\Database\Offer;
-use App\Database\Region;
 use App\Database\User;
 use App\Services\PageGenerator;
 use Telegram\Bot\Api;
@@ -28,11 +27,8 @@ class CaseCategorySelect
                 break;
             case 'select_my_category':
                 $user = new User();
-                $region = new Region();
-
                 $user->update($telegramId, ['category_id'=>$category->getCategoryBySlug($data[2])->id]);
-                $getUser = $user->findByTelegramId($telegramId);
-                PageGenerator::generate($telegram, ProfileData::generate($telegramId, $getUser, $region->getUserRegion($getUser->id), $messageId), InlineButtonsForMyProfile::prepare());
+                PageGenerator::generate($telegram, ProfileData::generate($telegramId, $messageId), InlineButtonsForMyProfile::prepare());
                 break;
         }
     }

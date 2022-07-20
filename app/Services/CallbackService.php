@@ -4,7 +4,6 @@
 namespace App\Services;
 
 
-use App\Actions\BotLogger;
 use App\Actions\CallbackActionCase\CaseCategorySelect;
 use App\Actions\CallbackActionCase\CaseCategoryShow;
 use App\Actions\CallbackActionCase\CaseCitySelect;
@@ -51,7 +50,6 @@ class CallbackService
 
     function handler()
     {
-        //BotLogger::store($this->сallback_data);
         if (TelegramSessionService::getSession($this->telegramId)->last_activity === 'main_menu' )
         {
             $this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => '<i>Время Вашей сессии уже истекло. Возвращаемся на главную.</i>']);
@@ -62,7 +60,7 @@ class CallbackService
             case '@update_lastName_cancel':
             case '@update_name_cancel':
             case '@my_profile':
-                PageGenerator::generate($this->telegram, ProfileData::generate($this->telegramId, $this->getUser, $this->getRegion, $this->messageId), InlineButtonsForMyProfile::prepare());
+                PageGenerator::generate($this->telegram, ProfileData::generate($this->telegramId, $this->messageId), InlineButtonsForMyProfile::prepare());
                 break;
             case '@update_name_accept':
             case '@update_name':

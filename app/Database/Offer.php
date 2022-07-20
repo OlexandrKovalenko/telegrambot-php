@@ -4,7 +4,6 @@
 namespace App\Database;
 
 
-use App\Actions\BotLogger;
 use PDO;
 use PDOException;
 
@@ -83,6 +82,7 @@ VALUES (:uid, :city, '1', '%empty%', '%empty%', '%empty%', '%empty%', '%empty%',
 
     function deleteOffer($id)
     {
+        return $this->query->prepare("DELETE FROM offers WHERE id=?")->execute([$id]);
     }
 
 }

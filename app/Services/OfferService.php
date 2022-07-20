@@ -37,10 +37,19 @@ class OfferService
 
     }
 
-    private function issetEmptyUserOffer($uid)
+    static function updateBySlug($slug, $data)
     {
         $offer = new Offer();
+        return $offer->updateOffer(self::showBySlug($slug)->id, $data);
     }
+
+    static function destroyBySlug($slug)
+    {
+        $offer = new Offer();
+        return $offer->deleteOffer(self::showBySlug($slug)->id);
+    }
+
+
 
 
 }

@@ -4,7 +4,6 @@
 namespace App\Actions\CallbackActionCase;
 
 
-use App\Actions\BotLogger;
 use App\Actions\Keyboard\InlineButtonsRegionSelector;
 use App\Actions\Page\RegionData;
 use App\Services\PageGenerator;

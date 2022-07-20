@@ -3,7 +3,6 @@
 namespace App\Services;
 
 
-use App\Actions\BotLogger;
 use App\Actions\Keyboard\InlineButtonConfirm;
 use App\Actions\Keyboard\InlineButtonsForMyProfile;
 use App\Actions\Page\MainData;
@@ -50,7 +49,7 @@ class TextMessageService
                 break;
             case 'Мой профиль':
                 $this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId-1]);
-                PageGenerator::generate($this->telegram, ProfileData::generate($this->telegramId, $this->getUser, $this->getRegion), InlineButtonsForMyProfile::prepare());
+                PageGenerator::generate($this->telegram, ProfileData::generate($this->telegramId), InlineButtonsForMyProfile::prepare());
                 break;
         }
 
@@ -84,7 +83,7 @@ class TextMessageService
                         {
                             if ($userSite === 'update_name') $this->getUser = $this->user->update($this->telegramId, ['first_name'=> $this->text]);
                             if ($userSite === 'update_lastName') $this->getUser = $this->user->update($this->telegramId, ['last_name'=> $this->text]);
-                            PageGenerator::generate($this->telegram, ProfileData::generate($this->telegramId, $this->getUser, $this->getRegion), InlineButtonsForMyProfile::prepare());
+                            PageGenerator::generate($this->telegram, ProfileData::generate($this->telegramId), InlineButtonsForMyProfile::prepare());
                         }
                 break;
                 case 'update_phone':
@@ -96,7 +95,7 @@ class TextMessageService
                         $this->getUser = $this->user->update($this->telegramId, ['phone'=>
                             $this->telegram->getWebhookUpdate()['message']['contact']['phone_number'] ?? ValidationService::phoneNumFixer($this->telegram->getWebhookUpdate()['message']['text'])
                         ]);
-                        PageGenerator::generate($this->telegram, ProfileData::generate($this->telegramId, $this->getUser, $this->getRegion), InlineButtonsForMyProfile::prepare());
+                        PageGenerator::generate($this->telegram, ProfileData::generate($this->telegramId), InlineButtonsForMyProfile::prepare());
                         TelegramSessionService::setSession($this->telegramId, 'my_profile');
                     }
                     else

@@ -15,4 +15,10 @@ class UserService extends User
             $user->create($data);
         }
     }
+
+    static function showByTelegramId($tId)
+    {
+        $user = new User();
+        return $user->findByTelegramId($tId);
+    }
 }

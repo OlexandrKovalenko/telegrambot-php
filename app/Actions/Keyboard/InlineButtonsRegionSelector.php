@@ -4,7 +4,6 @@
 namespace App\Actions\Keyboard;
 
 
-use App\Actions\BotLogger;
 use App\Database\Region;
 
 class InlineButtonsRegionSelector

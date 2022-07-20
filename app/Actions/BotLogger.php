@@ -4,7 +4,6 @@
 namespace App\Actions;
 
 
-use App\Database\DBConnect;
 use Carbon\Carbon;
 
 class BotLogger

@@ -4,12 +4,6 @@
 namespace App\Services;
 
 
-use App\Actions\BotLogger;
-use App\Actions\Keyboard\InlineButtonConfirm;
-use App\Actions\Keyboard\InlineButtonsForEditOffers;
-use App\Actions\Keyboard\InlineButtonsForMyOffersList;
-use App\Actions\Keyboard\InlineButtonsForMyProfile;
-use App\Actions\Keyboard\InlineButtonsRegionSelector;
 use Telegram\Bot\Api;
 
 class PageGenerator

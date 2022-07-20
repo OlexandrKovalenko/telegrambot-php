@@ -4,7 +4,6 @@
 namespace App\Actions\CallbackActionCase;
 
 
-use App\Actions\BotLogger;
 use App\Actions\Keyboard\InlineButtonsForMyProfile;
 use App\Actions\Page\ProfileData;
 use App\Database\Offer;
@@ -24,9 +23,8 @@ class CaseCitySelect
         if ($data[1] === 'profile_city')
         {
             $city = $region->getCityBySlug($data[2]);
-            $getUser = $user->update($telegramId, ['located_city_id'=> $city->id]);
-            $getRegion = $region->getUserRegion($getUser->id);
-            PageGenerator::generate($telegram, ProfileData::generate($telegramId, $getUser, $getRegion, $messageId), InlineButtonsForMyProfile::prepare());
+            $user->update($telegramId, ['located_city_id'=> $city->id]);
+            PageGenerator::generate($telegram, ProfileData::generate($telegramId, $messageId), InlineButtonsForMyProfile::prepare());
 
         }
         elseif ($data[1] === 'my_offer_city')

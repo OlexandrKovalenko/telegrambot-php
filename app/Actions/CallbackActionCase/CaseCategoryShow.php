@@ -4,7 +4,6 @@
 namespace App\Actions\CallbackActionCase;
 
 
-use App\Actions\BotLogger;
 use App\Actions\Keyboard\InlineButtonCategorySelector;
 use App\Actions\Page\CategoriesData;
 use App\Database\Category;

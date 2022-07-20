@@ -8,6 +8,15 @@ class InlineButtonsForEditOffers
 {
     static function prepare($offer)
     {
+        if ($offer->is_active)
+        {
+            $text = hex2bin('E29B94')." Деактивировать";
+            $callback = "$offer->callbackdata#deactivate#$offer->callback";
+        } else {
+            $text = hex2bin('E29C85')." Активировать";
+            $callback = "$offer->callbackdata#activate#$offer->callback";
+
+        }
         $data['my_offer_update'] = [
             [
                 'text'=> hex2bin('E29C8F')." Регион",
@@ -35,6 +44,10 @@ class InlineButtonsForEditOffers
             [
                 'text'=> hex2bin('E29C8F')." Контакты",
                 'callback' => "$offer->callbackdata#contacts#$offer->callback",
+            ],
+            [
+                'text'=> $text,
+                'callback' => $callback,
             ],
             [
                 'text'=> hex2bin('E29D8C')." Удалить",
