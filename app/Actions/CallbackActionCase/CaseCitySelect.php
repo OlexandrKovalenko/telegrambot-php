@@ -31,7 +31,8 @@ class CaseCitySelect
         {
             $city = $region->getCityBySlug($data[3]);
             $offer->updateOffer($offer->getOfferBySlug($data[2])->id, ['city_id' => $city->id]);
-            CaseMyOffers::show($telegram, $telegramId, $messageId);
+            $telegram->deleteMessage(['chat_id' => $telegramId, 'message_id' => $messageId]);
+            CaseEditMyOffer::edit($telegram, $telegramId, $data[2]);
         }
     }
 

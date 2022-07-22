@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Actions\BotLogger;
 use App\Actions\CallbackActionCase\CaseCategorySelect;
 use App\Actions\CallbackActionCase\CaseCategoryShow;
 use App\Actions\CallbackActionCase\CaseCitySelect;
@@ -52,9 +53,11 @@ class CallbackService
     {
         if (TelegramSessionService::getSession($this->telegramId)->last_activity === 'main_menu' )
         {
-            $this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => '<i>Время Вашей сессии уже истекло. Возвращаемся на главную.</i>']);
+            $this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => '<i>Час сесії вичерпано. Повернення до головного меню.</i>']);
             PageGenerator::generate($this->telegram, MainData::generate($this->telegramId));
         }
+        $data = explode("#", $this->сallback_data);
+
         switch ($this->сallback_data){
             case '@update_phone_cancel':
             case '@update_lastName_cancel':
@@ -66,13 +69,13 @@ class CallbackService
             case '@update_name':
                 $this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId]);
                 TelegramSessionService::setSession($this->telegramId, 'update_name');
-                $this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => 'Введите свое имя:']);
+                $this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => 'Введіть ім\'я:']);
                 break;
             case '@update_lastName_accept':
             case '@update_lastName':
                 $this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId]);
                 TelegramSessionService::setSession($this->telegramId, 'update_lastName');
-                $this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => 'Введите свою фамилию:']);
+                $this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => 'Введіть прізвище:']);
                 break;
 
             case '@update_phone_accept':
@@ -86,7 +89,7 @@ class CallbackService
                 $this->telegram->sendMessage([
                     'chat_id' => $this->telegramId,
                     'parse_mode' => 'HTML',
-                    'text' => 'Предоставить свой номер телефона:',
+                    'text' => 'Введіть свій номер телефону:',
                     'request_contact' => true,
                     'reply_markup' => $reply_markup]);
                 break;
@@ -107,29 +110,32 @@ class CallbackService
                 CaseCitySelect::select($this->telegram, $this->telegramId, $this->messageId, $data);
                 break;
             case '@create_new_offer':
-                //$this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => '*Ваши заявки:*']);
-                //OfferService::create($this->getUser->id, $this->getRegion->located_city_id);
-                //$this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId-1]);
+                $newOffer = OfferService::create($this->getUser->id, $this->getRegion->located_city_id);
+                CaseEditMyOffer::edit($this->telegram, $this->telegramId, $this->offer->getOfferById($newOffer)->callback, $this->messageId);
             case '@my_offers':
                 CaseMyOffers::show($this->telegram, $this->telegramId, $this->messageId);
                 break;
-            case (preg_match('/@my_offer_edit#.*/', $this->сallback_data) ? $this->сallback_data : null):
-                $data = explode("#", $this->сallback_data);
-                CaseEditMyOffer::edit($this->telegram, $this->telegramId, $this->messageId, $data);
+            case '@my_offers_with_img':
+                $this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId]);
+                CaseMyOffers::show($this->telegram, $this->telegramId);
                 break;
+            case (preg_match('/@my_offer_store#.*#_cancel/', $this->сallback_data) ? $this->сallback_data : null):
+                $data[1] = $data[2];
+            case (preg_match('/@my_offer_edit#.*/', $this->сallback_data) ? $this->сallback_data : null):
+                CaseEditMyOffer::edit($this->telegram, $this->telegramId, $data[1], $this->messageId);
+                break;
+            case (preg_match('/@my_offer_store#.*#_accept/', $this->сallback_data) ? $this->сallback_data : null):
             case (preg_match('/@my_offer_update#.*/', $this->сallback_data) ? $this->сallback_data : null):
-                $data = explode("#", $this->сallback_data);
                 CaseUpdateMyOffer::update($this->telegram, $this->telegramId, $this->messageId, $data);
                 break;
             case (preg_match('/@category#.*/', $this->сallback_data) ? $this->сallback_data : null):
-                $data = explode("#", $this->сallback_data);
                 CaseCategorySelect::select($this->telegram, $this->telegramId, $this->messageId, $data);
                 break;
             case '@main_menu':
                 $this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId]);
                 $this->telegram->answerCallbackQuery([
                     'callback_query_id' => $this->telegram->getWebhookUpdate()['callback_query']['id'],
-                    'text'=>'На главную...',
+                    'text'=>'На головну...',
                     'show_alert'=> false,
                     'cache_time'=>1
                 ]);

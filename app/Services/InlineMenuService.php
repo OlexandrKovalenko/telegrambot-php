@@ -5,6 +5,8 @@ namespace App\Services;
 
 
 
+use App\Actions\BotLogger;
+
 class InlineMenuService
 {
     private string|int|null $menuName;
@@ -46,31 +48,32 @@ class InlineMenuService
         {
             case 'my_profile':
                 $keyboard['inline_keyboard'][$rowIndex] = [
-                    ['text' => " В главное меню... ".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
+                    ['text' => "В головне меню... ".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
                 ];
                 break;
             case 'my_offers':
                 $keyboard['inline_keyboard'][$rowIndex] = [
-                    ['text' => hex2bin('E29E95')." Новая заявка", 'callback_data' => "@main_menu"],
-                    ['text' => " Профиль... " . hex2bin('F09F9499'), 'callback_data' => "@my_profile"],
+                    ['text' => hex2bin('E29E95')." Новий запит", 'callback_data' => "@create_new_offer"],
+                    ['text' => " Профіль... " . hex2bin('F09F9499'), 'callback_data' => "@my_profile"],
                 ];
                 break;
             case 'my_offer_update':
+                $this->data[0]['img'] != null ? $callback = '@my_offers_with_img' :  $callback = '@my_offers';
                 $keyboard['inline_keyboard'][$rowIndex] = [
-                    ['text' => hex2bin('F09F9499')." Назад", 'callback_data' => "@my_offers"],
-                    ['text' => "В главное меню... ".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
+                    ['text' => hex2bin('F09F9499')." Назад", 'callback_data' => $callback],
+                    ['text' => "В головне меню... ".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
                 ];
                 break;
             case 'region':
                 $keyboard['inline_keyboard'][$rowIndex] = [
-                    ['text' => hex2bin('F09F9499')." Профиль... ", 'callback_data' => "@my_profile"],
-                    ['text' => "В главное меню... ".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
+                    ['text' => hex2bin('F09F9499')." Профіль... ", 'callback_data' => "@my_profile"],
+                    ['text' => "В головне меню... ".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
                 ];
                 break;
             case 'category':
                 $keyboard['inline_keyboard'][$rowIndex] = [
-                    ['text' => hex2bin('F09F9499') . " В главное меню... ", 'callback_data' => "@my_offers"],
-                    ['text' => " Профиль... " . hex2bin('F09F9499'), 'callback_data' => "@my_profile"],
+                    ['text' => hex2bin('F09F9499') . " В головне меню... ", 'callback_data' => "@my_offers"],
+                    ['text' => " Профіль... " . hex2bin('F09F9499'), 'callback_data' => "@my_profile"],
                 ];
                 break;
         }

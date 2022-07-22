@@ -38,15 +38,11 @@ require __DIR__ . '/app/Services/ValidationService.php';*/
 
 //require __DIR__ . '/app/Actions/Keyboard/InlineButtonsRegionSelector.php';
 
-use App\Actions\Keyboard\InlineButtonCategorySelector;
-use App\Actions\Keyboard\InlineButtonsRegionSelector;
-use App\Actions\Page\RegionData;
-use App\Database\Category;
+use App\Actions\BotLogger;
+
 use App\Services\CallbackService;
-use App\Services\PageGenerator;
 use App\Services\TextMessageService;
 use App\Services\UserService;
-use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Telegram\Bot\Api;
 
 $key = env::TELEGRAMKEY;

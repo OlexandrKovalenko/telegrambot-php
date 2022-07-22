@@ -11,15 +11,15 @@ class CreateButtonKeyboard
             case 'start':
             case 'my_offers':
             return [
-                    ['Главное меню', 'Мой профиль']
+                    ['Головне меню', 'Мій профіль']
                 ];
             case 'main_menu':
                 return [
-                    ['Мой профиль']
+                    ['Мій профіль']
                 ];
             case 'my_profile':
                 return [
-                    ['Главное меню']
+                    ['Головне меню']
                 ];
         }
     }

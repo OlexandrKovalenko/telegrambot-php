@@ -10,11 +10,11 @@ class InlineButtonConfirm
     {
         $data['confim'] = [
             [
-                'text'=> hex2bin('E29C85')." Да",
+                'text'=> hex2bin('E29C85')." Так",
                 'callback' => $callback.'_accept',
             ],
             [
-                'text'=> hex2bin('E29D8C').' Нет',
+                'text'=> hex2bin('E29D8C').' Ні',
                 'callback' => $callback.'_cancel',
             ],
         ];

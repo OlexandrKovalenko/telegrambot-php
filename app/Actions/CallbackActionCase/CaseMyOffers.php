@@ -14,7 +14,7 @@ use Telegram\Bot\Api;
 
 class CaseMyOffers
 {
-    static function show(Api $telegram, $telegramId, $messageId)
+    static function show(Api $telegram, $telegramId, $messageId = null)
     {
         $user = new User();
 

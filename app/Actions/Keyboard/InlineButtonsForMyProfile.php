@@ -10,11 +10,11 @@ class InlineButtonsForMyProfile
     {
         $data['my_profile']= [
             [
-                'text'=> hex2bin('E29C8F')." Имя",
+                'text'=> hex2bin('E29C8F')." Ім'я",
                 'callback' => '@update_name',
             ],
             [
-                'text'=> hex2bin('E29C8F')." Фамилия",
+                'text'=> hex2bin('E29C8F')." Прізвище",
                 'callback' => '@update_lastName',
             ],
             [
@@ -22,15 +22,15 @@ class InlineButtonsForMyProfile
                 'callback' => '@update_phone',
             ],
             [
-                'text'=> hex2bin('E29C8F')." Категория",
+                'text'=> hex2bin('E29C8F')." Категорія",
                 'callback' => '@update_category',
             ],
             [
-                'text'=> hex2bin('E29C8F')." Регион",
+                'text'=> hex2bin('E29C8F')." Регіон",
                 'callback' => '@update_region',
             ],
             [
-                'text'=> hex2bin('F09F9383')." Ваши заявки",
+                'text'=> hex2bin('F09F9383')." Ваші запити",
                 'callback' => '@my_offers',
             ],
         ];

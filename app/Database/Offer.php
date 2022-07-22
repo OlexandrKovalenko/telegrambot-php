@@ -4,6 +4,7 @@
 namespace App\Database;
 
 
+use App\Actions\BotLogger;
 use PDO;
 use PDOException;
 
@@ -53,8 +54,8 @@ class Offer
     function storeOffer($data)
     {
         try {
-            $sql = "INSERT INTO `offers` (`user_id`, `city_id`, `category_id`, `title`, `description`, `img`, `contacts`, `price`, `is_active`, `callback`, `created_at`, `updated_at`) 
-VALUES (:uid, :city, '1', '%empty%', '%empty%', '%empty%', '%empty%', '%empty%', '0', :callback , :date, CURRENT_TIMESTAMP);";
+            $sql = "INSERT INTO `offers` (`user_id`, `city_id`, `category_id`, `title`, `description`, `contacts`, `price`, `is_active`, `callback`, `created_at`, `updated_at`) 
+VALUES (:uid, :city, '1', '%empty%', '%empty%', '%empty%', '%empty%', '0', :callback , :date, CURRENT_TIMESTAMP);";
             $stmt = $this->query->prepare($sql);
             $stmt->execute([
                 ':uid'=> $data['uid'],

@@ -10,7 +10,7 @@ class MyOffersData
     {
         if (empty((array) $data))
         {
-            $str = 'У вас нет заявок.';
+            $str = 'У вас ще немає запитів.';
         }
         else
         {

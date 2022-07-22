@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Actions\BotLogger;
 use Telegram\Bot\Api;
 
 class PageGenerator

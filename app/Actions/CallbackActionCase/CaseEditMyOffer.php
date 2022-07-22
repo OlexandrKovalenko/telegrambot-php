@@ -4,6 +4,7 @@
 namespace App\Actions\CallbackActionCase;
 
 
+use App\Actions\BotLogger;
 use App\Actions\Keyboard\InlineButtonsForEditOffers;
 use App\Actions\Page\EditOfferData;
 use App\Services\CategoryService;
@@ -15,10 +16,13 @@ use Telegram\Bot\Api;
 
 class CaseEditMyOffer
 {
-    static function edit(Api $telegram, $telegramId, $messageId, $data)
+    static function edit(Api $telegram, $telegramId, $slug, $messageId = null)
     {
-        $offer = OfferService::showBySlug($data[1]);
-
+        $offer = OfferService::showBySlug($slug);
+        if ($offer->img != null)
+        {
+            $telegram->deleteMessage(['chat_id' => $telegramId, 'message_id' => $messageId]);
+        }
         if ($offer->user_id == UserService::showByTelegramId($telegramId)->id)
         {
             $offer->city = RegionService::showCity($offer->city_id)->city;

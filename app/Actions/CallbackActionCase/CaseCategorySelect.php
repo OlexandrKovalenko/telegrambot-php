@@ -23,7 +23,8 @@ class CaseCategorySelect
             case 'select_my_offer_category';
                 $offer = new Offer();
                 $offer->updateOffer($offer->getOfferBySlug($data[2])->id, ['category_id' => $category->getCategoryBySlug($data[3])->id]);
-                CaseMyOffers::show($telegram, $telegramId, $messageId);
+                $telegram->deleteMessage(['chat_id' => $telegramId, 'message_id' => $messageId]);
+                CaseEditMyOffer::edit($telegram, $telegramId, $data[2]);
                 break;
             case 'select_my_category':
                 $user = new User();
