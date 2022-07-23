@@ -139,9 +139,11 @@ class TextMessageService
                     {
 
                         $this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId-1]);
-                        if (isset($this->message->photo[2]))
-                        {
-                            $fileId = $this->message->photo[2]->file_id;
+                        if ($this->message->photo)
+                        {                        BotLogger::store($this->message->photo[count($this->message->photo)-1]);
+
+                            $fileId = $this->message->photo[count($this->message->photo)-1]->file_id;
+
                             GetPhoto::get($fileId, $data[2]);
                             CaseEditMyOffer::edit($this->telegram, $this->telegramId, $data[2]);
                         }

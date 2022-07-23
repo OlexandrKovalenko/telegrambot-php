@@ -41,6 +41,7 @@ require __DIR__ . '/app/Services/ValidationService.php';*/
 use App\Actions\BotLogger;
 
 use App\Services\CallbackService;
+use App\Services\FileStorageService;
 use App\Services\TextMessageService;
 use App\Services\UserService;
 use Telegram\Bot\Api;
@@ -68,3 +69,5 @@ function BotApp(Api $telegram)
 }
 
 BotApp($telegram);
+
+

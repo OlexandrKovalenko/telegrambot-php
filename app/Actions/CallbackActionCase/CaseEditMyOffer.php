@@ -8,6 +8,7 @@ use App\Actions\BotLogger;
 use App\Actions\Keyboard\InlineButtonsForEditOffers;
 use App\Actions\Page\EditOfferData;
 use App\Services\CategoryService;
+use App\Services\FileStorageService;
 use App\Services\OfferService;
 use App\Services\PageGenerator;
 use App\Services\RegionService;
@@ -21,7 +22,7 @@ class CaseEditMyOffer
         $offer = OfferService::showBySlug($slug);
         if ($offer->img != null)
         {
-            $telegram->deleteMessage(['chat_id' => $telegramId, 'message_id' => $messageId]);
+            FileStorageService::findImg($slug) ? $telegram->deleteMessage(['chat_id' => $telegramId, 'message_id' => $messageId]) : OfferService::updateBySlug($slug, ['img' => null]);
         }
         if ($offer->user_id == UserService::showByTelegramId($telegramId)->id)
         {

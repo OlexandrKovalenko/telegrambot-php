@@ -4,6 +4,7 @@
 namespace App\Actions\CallbackActionCase;
 
 
+use App\Services\FileStorageService;
 use App\Services\OfferService;
 use App\Services\TelegramSessionService;
 use Telegram\Bot\Api;
@@ -55,6 +56,8 @@ class CaseUpdateMyOffer
                 if ($offer->img != null)
                 {
                     TelegramSessionService::setSession($telegramId, 'my_offer_store_delete_photo');
+                    $file = FileStorageService::findImg($data[2].'.jpg');
+                    if ($file) FileStorageService::deleteImg($file[0]);
                     OfferService::updateBySlug($data[2], ['img' => null]);
                 }
                 CaseEditMyOffer::edit($telegram, $telegramId, $data[2], $messageId);
@@ -70,6 +73,8 @@ class CaseUpdateMyOffer
                 CaseEditMyOffer::edit($telegram, $telegramId, $data[2], $messageId);
                 break;
             case 'delete':
+                $file = FileStorageService::findImg($data[2].'.jpg');
+                if ($file) FileStorageService::deleteImg($file[0]);
                 OfferService::destroyBySlug($data[2]);
                 CaseMyOffers::show($telegram, $telegramId, $messageId);
                 break;

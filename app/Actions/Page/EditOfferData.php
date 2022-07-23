@@ -5,11 +5,14 @@ namespace App\Actions\Page;
 
 
 use App\Actions\BotLogger;
+use App\Services\FileStorageService;
+use App\Services\OfferService;
 
 class EditOfferData
 {
     static function generate($id, $data)
     {
+        $data->img && FileStorageService::findImg($data->img) ? $img = $data->img : $img = null;
 
         $userSite = 'my_offer_edit';
         $data->is_active ? $str = hex2bin('E29C85')." Активовано ".hex2bin('E29C85') : $str = hex2bin('E29B94')." Деактивовано".hex2bin('E29B94');
@@ -21,7 +24,7 @@ class EditOfferData
             //'botMessage'=>$botMessage,
             'inlineMsg'=>$inLineMsg,
             'msgId' => $data->msgId,
-            'photo' => $data->img ?? null
+            'photo' => $img
         ];
     }
 

@@ -5,6 +5,7 @@ namespace App\Actions;
 
 
 use App\env;
+use App\Services\FileStorageService;
 use App\Services\OfferService;
 
 class GetPhoto
@@ -19,6 +20,6 @@ class GetPhoto
         $img_url = "https://api.telegram.org/file/bot$key/$img_path";
         $img = "$offerSlug.jpg";
         copy($img_url, "storage/img/$img");
-        OfferService::updateBySlug($offerSlug,['img' => $img]);
+        if (FileStorageService::findImg($img)) OfferService::updateBySlug($offerSlug,['img' => $img]);
     }
 }

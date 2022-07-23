@@ -53,6 +53,7 @@ class CallbackService
     {
         if (TelegramSessionService::getSession($this->telegramId)->last_activity === 'main_menu' )
         {
+            $this->telegram->deleteMessage(['chat_id' => $this->telegramId, 'message_id' => $this->messageId]);
             $this->telegram->sendMessage(['chat_id' => $this->telegramId, 'parse_mode' => 'HTML', 'text' => '<i>Час сесії вичерпано. Повернення до головного меню.</i>']);
             PageGenerator::generate($this->telegram, MainData::generate($this->telegramId));
         }

@@ -64,16 +64,11 @@ class InlineMenuService
                     ['text' => "В головне меню... ".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
                 ];
                 break;
+            case 'category':
             case 'region':
                 $keyboard['inline_keyboard'][$rowIndex] = [
                     ['text' => hex2bin('F09F9499')." Профіль... ", 'callback_data' => "@my_profile"],
                     ['text' => "В головне меню... ".hex2bin('F09F9499'), 'callback_data' => "@main_menu"]
-                ];
-                break;
-            case 'category':
-                $keyboard['inline_keyboard'][$rowIndex] = [
-                    ['text' => hex2bin('F09F9499') . " В головне меню... ", 'callback_data' => "@my_offers"],
-                    ['text' => " Профіль... " . hex2bin('F09F9499'), 'callback_data' => "@my_profile"],
                 ];
                 break;
         }
