@@ -4,3 +4,4 @@ UnitTest
 *.cache
 README.md
 .idea
+storage/img/*
